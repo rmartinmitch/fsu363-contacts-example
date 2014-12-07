@@ -17,7 +17,7 @@
 
       function onBodyLoad() {
         //During testing, Let me know we got this far
-        alert("onBodyLoad");
+        //alert("onBodyLoad");
         //Add the PhoneGap deviceready event listener
         document.addEventListener("deviceready", onDeviceReady, false);
       }
@@ -25,7 +25,7 @@
       function onDeviceReady() {
         //During testing, Let me know PhoneGap actually
         // initialized
-        alert("onDeviceReady");
+        //alert("onDeviceReady");
       }
 
       function getContact(contact) {
@@ -148,7 +148,7 @@
       }
     </script>
   </head>
-  <body onload="onBodyLoad()">
+  <body onLoad="onBodyLoad()">
     <section id="main" data-role="page" >
       <header data-role="header">
         <h1>Contacts Demo #1</h1>
@@ -158,28 +158,28 @@
         <div id="contacts">
           <ul data-role="listview">
             <li>
-              <a onclick="getContact('mpalin');">Michael Palin</a>
+              <a onClick="getContact('mpalin');">Michael Palin</a>
             </li>
             <li>
-              <a onclick="getContact('jcleese');">John Cleese</a>
+              <a onClick="getContact('jcleese');">John Cleese</a>
             </li>
             <li>
-              <a onclick="getContact('tjones');">Terry Jones</a>
+              <a onClick="getContact('tjones');">Terry Jones</a>
             </li>
             <li>
-              <a onclick="getContact('gchapman');">Graham Chapman</a>
+              <a onClick="getContact('gchapman');">Graham Chapman</a>
             </li>
             <li>
-              <a onclick="getContact('tgilliam');">Terry Gilliam</a>
+              <a onClick="getContact('tgilliam');">Terry Gilliam</a>
             </li>
             <li>
-              <a onclick="getContact('eidle');">Eric Idle</a>
+              <a onClick="getContact('eidle');">Eric Idle</a>
             </li>
           </ul>
         </div>
       </div>
       <footer data-role="footer" data-position="fixed">
-        <a href="http://www.phonegapessentials.com" target="_blank">PhoneGap Essentials</a>
+         <h4>Rick Mitchell</h4>
       </footer>
     </section>
     <section id="contactDetail" data-role="page" data-add-back-btn="true">
@@ -188,7 +188,7 @@
       </header>
       <div data-role="content">
         <div id="detailContent"></div>
-        <input type="button" id="btnAdd" value="Add Contact" onclick="addContact();" />
+        <input type="button" id="btnAdd" value="Add Contact" onClick="addContact();" />
       </div>
     </section>
   </body>
