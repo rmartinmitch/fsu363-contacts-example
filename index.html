@@ -1,43 +1,195 @@
 <!DOCTYPE html>
-<!--
-    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
-
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="msapplication-tap-highlight" content="no" />
-        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>PhoneGap</h1>
-					  <button onclick="pick()">Pick a contact</button>
+  <head>
+    <title>Example 15-1</title>
+    <meta name="viewport" content="width=device-width, height=device-height initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="jquery.mobile1.0b3.min.css" />
+    <script type="text/javascript" charset="utf-8" src="jquery1.6.4.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="jquery.mobile1.0b3.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+    <script type="text/javascript">
+      //Some HTML constants we'll use
+      var br = "<br />";
+      var hr = "<hr />";
+      var endA = "</a>";
+      var contactInfo;
+
+      function onBodyLoad() {
+        //During testing, Let me know we got this far
+        alert("onBodyLoad");
+        //Add the PhoneGap deviceready event listener
+        document.addEventListener("deviceready", onDeviceReady, false);
+      }
+
+      function onDeviceReady() {
+        //During testing, Let me know PhoneGap actually
+        // initialized
+        alert("onDeviceReady");
+      }
+
+      function getContact(contact) {
+        //Build a string representing the file name we're going
+        // after
+        var contactFile = "contacts/" + contact + ".js";
+        //Get the contact information from the file system then
+        // call the callback function to parse the data
+        $.getJSON(contactFile, showContact);
+      }
+
+      function showContact(contactData) {
+        //======================================================
+        //Populate the Contact Details page with information
+        //about this contact
+        //======================================================
+        var dt = "";
+        //Store the contact data in our global variable so the
+        // AddContact function will have something to work with
+        contactInfo = contactData;
+        //======================================================
+        //First set the header content for the page to match the
+        //contact's full name
+        //======================================================
+        $('#contactName').text(contactData.FullName);
+        //======================================================
+        //Then populate the body of the content area with
+        //detailed fields from the data source
+        //======================================================
+        dt = '<b>First Name:</b> ' + contactData.FirstName + br;
+        dt += '<b>Last Name:</b> ' + contactData.LastName + br;
+        dt += '<b>Email Address:</b> <a href="mailto:' + contactData.EmailAddress + '">' + contactData.EmailAddress + endA + br;
+        dt += '<b>Office Phone:</b> <a href="tel:' + contactData.OfficePhone + '">' + contactData.OfficePhone + endA + br;
+        dt += '<b>Mobile Phone:</b> <a href="tel:' + contactData.MobilePhone + '">' + contactData.MobilePhone + endA + br;
+        $('#detailContent').html(dt);
+        //======================================================
+        //Then switch to the Contact Details page
+        //======================================================
+        $.mobile.changePage("#contactDetail", "slide", false, true);
+      }
+
+      function addContact() {
+        alert("Adding " + contactInfo.FullName + " to contacts application");
+        //======================================================
+        //Create a new contact object
+        //======================================================
+        var contact = navigator.contacts.create();
+        //======================================================
+        //Populate the contact object with values
+        //======================================================
+        contact.displayName = contactInfo.FullName;
+        contact.nickname = contactInfo.FullName;
+        //======================================================
+        //Populate the Contact's Name entries
+        //======================================================
+        var tmpName = new ContactName();
+        tmpName.givenName = contactInfo.FirstName;
+        tmpName.familyName = contactInfo.LastName;
+        tmpName.formatted = contactInfo.FullName;
+        contact.name = tmpName;
+        //======================================================
+        //Populate Phone Number Entries
+        //======================================================
+        var phoneNums = [2];
+        phoneNums[0] = new ContactField('work', contactInfo.OfficePhone, false);
+        phoneNums[1] = new ContactField('mobile', contactInfo.MobilePhone, true);
+        contact.phoneNumbers = phoneNums;
+        //======================================================
+        //Populate Email Address
+        //======================================================
+        var emailAddresses = [1];
+        emailAddresses[0] = new ContactField('home', contactInfo.EmailAddress, true);
+        contact.emails = emailAddresses;
+
+        // save to device
+        contact.save(onContactSaveSuccess, onContactSaveError);
+      }
+
+      function onContactSaveSuccess() {
+        alert(contactInfo.FullName + " was successfully saved to the device contacts database");
+      }
+
+      function onContactSaveError(e) {
+        var msgText;
+        //======================================================
+        //Now build a message string based upon the error
+        //returned by the API
+        //======================================================
+        switch(e.code) {
+          case ContactError.UNKNOWN_ERROR:
+            msgText = "An Unknown Error was reported while saving the contact.";
+            break;
+          case ContactError.INVALID_ARGUMENT_ERROR:
+            msgText = "An invalid argument was used with the Contact API.";
+            break;
+          case ContactError.TIMEOUT_ERROR:
+            msgText = "Timeout Error.";
+            break;
+          case ContactError.PENDING_OPERATION_ERROR:
+            msgText = "Pending Operation Error.";
+            break;
+          case ContactError.IO_ERROR:
+            msgText = "IO Error.";
+            break; 
+          case ContactError.NOT_SUPPORTED_ERROR:
+            msgText = "Not Supported Error.";
+            break;
+          case ContactError.PERMISSION_DENIED_ERROR:
+            msgText = "Permission Denied Error.";
+            break;
+          default:
+            //Create a generic response, just in case the
+            // switch fails
+            msgText = "Unknown Error (" + e.code + ")";
+        }
+        //======================================================
+        //Now tell the user what happened
+        //======================================================
+        navigator.notification.alert(msgText, null, "Contact Save Error");
+      }
+    </script>
+  </head>
+  <body onload="onBodyLoad()">
+    <section id="main" data-role="page" >
+      <header data-role="header">
+        <h1>Contacts Demo #1</h1>
+      </header>
+      <div data-role="content">
+        <h3>Select Contact:</h3>
+        <div id="contacts">
+          <ul data-role="listview">
+            <li>
+              <a onclick="getContact('mpalin');">Michael Palin</a>
+            </li>
+            <li>
+              <a onclick="getContact('jcleese');">John Cleese</a>
+            </li>
+            <li>
+              <a onclick="getContact('tjones');">Terry Jones</a>
+            </li>
+            <li>
+              <a onclick="getContact('gchapman');">Graham Chapman</a>
+            </li>
+            <li>
+              <a onclick="getContact('tgilliam');">Terry Gilliam</a>
+            </li>
+            <li>
+              <a onclick="getContact('eidle');">Eric Idle</a>
+            </li>
+          </ul>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+      </div>
+      <footer data-role="footer" data-position="fixed">
+        <a href="http://www.phonegapessentials.com" target="_blank">PhoneGap Essentials</a>
+      </footer>
+    </section>
+    <section id="contactDetail" data-role="page" data-add-back-btn="true">
+      <header id="detailHeader" data-role="header"  >
+        <h1 id="contactName"></h1>
+      </header>
+      <div data-role="content">
+        <div id="detailContent"></div>
+        <input type="button" id="btnAdd" value="Add Contact" onclick="addContact();" />
+      </div>
+    </section>
+  </body>
 </html>
