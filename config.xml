@@ -3,11 +3,11 @@
 <!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
 <widget xmlns     	= "http://www.w3.org/ns/widgets"
         xmlns:gap 	= "http://phonegap.com/ns/1.0"
-        id        	= "com.rickmitchell.contacts"
+        id        	= "com.rickmitchell.setcontacts"
 		versionCode = "1"
         version   	= "1.0.0">
 
-    <name>Read Contacts</name>
+    <name>Set Contacts</name>
 
     <description>
        Demo on the PhoneGap Contacts API

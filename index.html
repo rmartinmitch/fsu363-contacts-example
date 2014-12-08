@@ -4,10 +4,13 @@
     <title>Example 15-1</title>
     <meta name="viewport" content="width=device-width, height=device-height initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
     <link rel="stylesheet" href="jquery.mobile1.0b3.min.css" />
+	
     <script type="text/javascript" charset="utf-8" src="jquery1.6.4.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="jquery.mobile1.0b3.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+
     <script type="text/javascript">
       //Some HTML constants we'll use
       var br = "<br />";
@@ -151,7 +154,7 @@
   <body onLoad="onBodyLoad()">
     <section id="main" data-role="page" >
       <header data-role="header">
-        <h1>Contacts Demo #1</h1>
+        <h1>Set Contacts</h1>
       </header>
       <div data-role="content">
         <h3>Select Contact:</h3>
@@ -175,6 +178,10 @@
             <li>
               <a onClick="getContact('eidle');">Eric Idle</a>
             </li>
+            <li>
+              <a onClick="getContact('rmitchell');">Rick Mitchell</a>
+            </li>
+
           </ul>
         </div>
       </div>
